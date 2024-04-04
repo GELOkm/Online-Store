@@ -1,0 +1,136 @@
+
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>OnlineShop - Commande</title>
+
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+  <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+
+</head>
+<body>
+  <div class="maindivclass">
+  <header>
+    <section>
+      <caption>
+        <img src="assets/img/logo.svg" height="80">
+      </caption>
+      <nav>
+        <a href="index.html">Accueil</a>
+        <a href="products.html">Produits</a>
+        <a href="contact.html">Contact</a>
+        <a id="myCart" class="shopping-cart" href="./shopping-cart.html" title="Panier">
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+            <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+          </span>
+          <span class="count">3</span>
+        </a>
+      </nav>
+    </section>
+  </header>
+
+  <main>
+    <section>
+      <h4>Commande</h4>
+      <hr>
+      <form id="orderForm" method="get" action="confirmation.html">
+        <fieldset>
+          <legend>
+            Contact
+          </legend>
+    <div class="order-wrapper">
+        <div class="order-row-label">
+          <label class="order-label" for="firstname">Prénom</label>
+          <label class="order-label" for="lastname">Nom</label>
+        </div>
+        <div class="order-row"> 
+          <input type="text" id="firstname" name="firstname" minlength="2" pattern="...*">          
+          <input type="text" id="lastname" name="lastname" minlength="2" required pattern="...*">
+        </div>
+    </div>
+    <div class="order-wrapper">
+        <div class="order-row-label">
+          <label class="order-label" for="email">Adresse courriel</label>
+          <label class="order-label" for="phone">Numéro de téléphone</label>
+        </div>
+        <div class="order-row">
+          <input type="email" id="email" name="email" required>
+          <input type="tel" id="phone" name="phone" pattern="(\+?\d*\s?-?)?\(?\d{3}\)?\s?-?\d{3}\s?-?\d{4}" required placeholder="123 456-7890">
+        </div>
+    </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>
+            Paiement
+          </legend>
+        <div class="order-wrapper">
+          <div class="order-row-label">
+          <label class="order-label" for="creditcard">Numéro de carte</label>
+          <label class="order-label" for="creditcardexpiry">Date d'expiration</label>
+        </div>
+        <div class="order-row">
+          <input type="password" id="creditcard" name="creditcard" pattern="\d{4}\s?\d{4}\s?\d{4}\s?\d{4}" required placeholder="0000 0000 0000 0000">
+          <input type="month" id="creditcardexpiry" name="creditcardexpiry" required>
+        </div>
+        </div>
+        </fieldset>
+        <input class="btn" type="submit" value="Payer">
+      </form>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <section>
+    <p>GELO</p>
+  </section>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
+
+
+<script>
+  window.onload = function () {
+    if (localStorage.getItem("hasCodeRunBefore") === null) {
+        localStorage.setItem("hasCodeRunBefore", true);
+        localStorage.setItem("orderQty", 1);
+    }
+}
+  
+  $("#orderForm").validate();
+
+  $('#orderForm').on('submit', () => {
+      localStorage.removeItem('userCart');
+      var orderQty = localStorage.getItem('orderQty');
+      localStorage.setItem('orderQty', (parseInt(orderQty) + 1));
+  });
+
+
+  let cart = JSON.parse(localStorage.getItem('userCart'));
+
+    if(cart == null || cart.length == 0){
+        
+        $('#myCart').html(`<span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>`);
+
+    }
+    else {
+      $('#myCart').html(`<span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>
+            <span class="count">`+ cart.length +`</span>`);
+  
+    }
+
+</script>
+</body>
+</html>

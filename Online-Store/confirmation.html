@@ -1,0 +1,104 @@
+
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>OnlineShop - Confirmation</title>
+
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+  <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+
+</head>
+<body>
+<div class="maindivclass">
+  <header>
+    <section>
+      <caption>
+        <img src="assets/img/logo.svg" height="80">
+      </caption>
+      <nav>
+        <a href="index.html">Accueil</a>
+        <a href="products.html">Produits</a>
+        <a href="contact.html">Contact</a>
+        <a id="myCart" class="shopping-cart" href="./shopping-cart.html" title="Panier">
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+            <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+          </span>
+          <span class="count">3</span>
+        </a>
+      </nav>
+    </section>
+  </header>
+
+  <main>
+    <section>
+
+      
+      <h2>
+        Votre commande est confirmée
+      </h2>
+      <hr>
+      <div id="mydiv">
+      </div>
+    </section>
+  </main>
+  </div>
+  
+  
+  <footer>
+    <section>
+      <p>GELO</p>
+    </section>
+  </footer>
+
+
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+<script>
+
+  var tba = "";
+
+  tba +=  "<p>  Votre commande #"+ localStorage.getItem('orderQty') +" a été passée avec succès! </p> ";
+
+  $('#mydiv').append(tba);
+
+
+  const urlParams = new URLSearchParams(window.location.search);
+    const firstName = urlParams.get('firstname');
+    const lastName = urlParams.get('lastname');
+
+    var tba2 = "Merci pour votre commande ";
+    tba2 += firstName;
+    tba2 += " ";
+    tba2 += lastName;
+
+    $('#mydiv').append(tba2);
+
+
+
+
+
+    let cart = JSON.parse(localStorage.getItem('userCart'));
+
+    if(cart == null || cart.length == 0){
+        
+        $('#myCart').html(`<span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>`);
+
+    }
+    else {
+      $('#myCart').html(`<span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>
+            <span class="count">`+ cart.length +`</span>`);
+  
+    }
+
+</script>
+</html>

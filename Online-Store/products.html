@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>OnlineShop - Produits</title>
+
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+  <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+
+</head>
+<body>
+
+  <div class="maindivclass">
+    <header>
+      <section>
+        <caption>
+          <img src="assets/img/logo.svg">
+        </caption>
+        <nav>
+          <a href="index.html">Accueil</a>
+          <a class="active" href="products.html">Produits</a>
+          <a href="contact.html">Contact</a>
+          <a id="myCart" class="shopping-cart" href="./shopping-cart.html" title="Panier">
+            <span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>
+            <span class="count">3</span>
+          </a>
+        </nav>
+      </section>
+    </header>
+
+
+
+    <main class="productsmainclass">
+      
+
+      <aside class="productsmainasideclass">
+        
+        <section>
+          <h2>Catégories</h2>
+          <div id="product-categories">
+            <ul>
+              <li id="displayCamera">Appareils photo</li>
+              <li id="displayConsole">Consoles</li>
+              <li id="displayScreen">Écrans</li>
+              <li id="displayComputer">Ordinateurs</li>
+              <li id="displayAll" class="selected">Tous les produits</li>
+            </ul>
+    
+          </div>
+        </section>
+        <section>
+          <h2>Classement</h2>
+          <div id="product-criteria">
+            
+            <ul>
+              <li id="sortPriceUpward" class="selected">Prix (bas-haut) </li>
+              <li id="sortPriceDownward">Prix (haut-bas) </li>
+              <li id="sortNameAZ">Nom (A-Z) </li>
+              <li id="sortNameZA">Nom (Z-A) </li>
+            </ul>
+            
+          </div>
+        </section>
+        
+      </aside>
+
+      <section class="productssectionsclass">
+        <div class="products-title">
+          <h1>Produits</h1>
+          <p id="products-count"></p>
+        </div>
+        
+        <div id="products-list">
+
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+
+  <footer class="productsfooter">
+    <section>
+      <p>GELO</p>
+    </section>
+  </footer>
+  
+  
+  <!--          --          -->
+  <!--      AJAX IMPORT     -->
+  <!--          --          -->
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  
+  <!--          --          -->
+  <!--      MORE SCRIPT     -->
+  <!--          --          -->
+  
+  <script>
+
+      function displayCameraHandler(data) {
+
+        $('#displayCamera').addClass("selected");
+        $('#displayConsole').removeClass("selected");
+        $('#displayComputer').removeClass("selected");
+        $('#displayScreen').removeClass("selected");
+        $('#displayAll').removeClass("selected");
+        $('#product-list').empty();
+        var cameras = []
+        data.forEach( function (product) {
+          if (product.category == "cameras") {
+            cameras.push(product);
+          }
+        });
+        displayProducts(cameras);
+      }
+
+      function displayConsoleHandler(data) {
+          $('#displayCamera').removeClass("selected");
+          $('#displayConsole').addClass("selected");
+          $('#displayComputer').removeClass("selected");
+          $('#displayScreen').removeClass("selected");
+          $('#displayAll').removeClass("selected");
+          $('#product-list').empty();
+          var consoles = []
+          data.forEach( function (product) {
+            if (product.category == "consoles") {
+              consoles.push(product);
+            }
+          });
+          displayProducts(consoles);
+      }
+
+
+      function displayScreenHandler(data) {
+          $('#displayCamera').removeClass("selected");
+          $('#displayConsole').removeClass("selected");
+          $('#displayComputer').removeClass("selected");
+          $('#displayScreen').addClass("selected");
+          $('#displayAll').removeClass("selected");
+          $('#product-list').empty();
+          
+          var screens = []
+          data.forEach( function (product) {
+            if (product.category == "screens") {
+              screens.push(product);
+            }
+          });
+          displayProducts(screens);
+      }
+
+      function displayComputerHandler(data) {
+          $('#displayCamera').removeClass("selected");
+          $('#displayConsole').removeClass("selected");
+          $('#displayComputer').addClass("selected");
+          $('#displayScreen').removeClass("selected");
+          $('#displayAll').removeClass("selected");
+          $('#product-list').empty();
+          var computers = []
+          data.forEach( function (product) {
+            if (product.category == "computers") {
+              computers.push(product);
+            }
+          });
+          displayProducts(computers);
+      }
+
+      function displayAllHandler(data) {
+          $('#displayCamera').removeClass("selected");
+          $('#displayConsole').removeClass("selected");
+          $('#displayComputer').removeClass("selected");
+          $('#displayScreen').removeClass("selected");
+          $('#displayAll').addClass("selected");
+          $('#product-list').empty();
+          var thisisall = []
+          data.forEach( function (product) {
+              thisisall.push(product);
+          });
+          displayProducts(thisisall);
+      }
+
+      function displayHelper(data) {
+        if($('#displayCamera').hasClass("selected")) {
+          displayCameraHandler(data);
+        }
+
+        if($('#displayConsole').hasClass("selected")) {
+          displayConsoleHandler(data);
+        }
+
+        if($('#displayComputer').hasClass("selected")) {
+          displayComputerHandler(data);
+        }
+
+        if($('#displayScreen').hasClass("selected")) {
+          displayScreenHandler(data);
+        }
+
+        if($('#displayAll').hasClass("selected")) {
+          displayAllHandler(data);
+        }
+        
+      }
+
+      function sortPriceUpwardHandler(data) {
+        $('#sortPriceUpward').addClass("selected");
+        $('#sortPriceDownward').removeClass("selected");
+        $('#sortNameAZ').removeClass("selected");
+        $('#sortNameZA').removeClass("selected");
+        function comparePU(a,b) {
+                if (a.price < b.price)
+                  return -1;
+                if (a.price > b.price)
+                  return 1;
+                return 0;
+          }
+          return data.sort(comparePU);
+      }
+
+
+      function sortPriceDownwardHandler(data) {
+        $('#sortPriceUpward').removeClass("selected");
+        $('#sortPriceDownward').addClass("selected");
+        $('#sortNameAZ').removeClass("selected");
+        $('#sortNameZA').removeClass("selected");
+
+        function comparePD(a,b) {
+                if (a.price > b.price)
+                  return -1;
+                if (a.price < b.price)
+                  return 1;
+                return 0;
+          }
+          return data.sort(comparePD);
+      }
+      
+      function sortNameAZHandler(data) {
+        $('#sortPriceUpward').removeClass("selected");
+        $('#sortPriceDownward').removeClass("selected");
+        $('#sortNameAZ').addClass("selected");
+        $('#sortNameZA').removeClass("selected");
+
+        function compareNAZ(a,b) {
+                if (a.name.toLowerCase() < b.name.toLowerCase())
+                  return -1;
+                if (a.name.toLowerCase() > b.name.toLowerCase())
+                  return 1;
+                return 0;
+          }
+          return data.sort(compareNAZ);
+      }
+
+      function sortNameZAHandler(data) {
+        $('#sortPriceUpward').removeClass("selected");
+        $('#sortPriceDownward').removeClass("selected");
+        $('#sortNameAZ').removeClass("selected");
+        $('#sortNameZA').addClass("selected");
+
+        function compareNZA(a,b) {
+                if (a.name.toLowerCase() > b.name.toLowerCase())
+                  return -1;
+                if (a.name.toLowerCase() < b.name.toLowerCase())
+                  return 1;
+                return 0;
+          }
+          return data.sort(compareNZA);
+      }
+      
+      function sortHandler(data) {
+        if ($('#sortPriceUpward').hasClass("selected")) {
+          return sortPriceUpwardHandler(data);
+        }
+        else if ($('#sortPriceDownward').hasClass("selected")) {
+          return sortPriceDownwardHandler(data);
+        }
+        else if ($('#sortNameAZ').hasClass("selected")) {
+          return sortNameAZHandler(data);
+        }
+        else {
+          return sortNameZAHandler(data);
+        }
+      }
+
+      ////////////////
+      //SET MY BUTTONS
+      ////////////////
+
+      function setMyButtons(data) {
+
+
+        // button 1/9
+        $('#displayCamera').on('click', { data: data }, (event) => {
+          var data = sortHandler(event.data.data);
+          displayCameraHandler(data);
+        });
+
+        // button 2/9
+        $('#displayConsole').on('click', { data: data }, (event) => {
+          var data = sortHandler(event.data.data);
+          displayConsoleHandler(data);
+        });
+
+        // button 3/9
+        $('#displayScreen').on('click', { data: data }, (event) => {
+          var data = sortHandler(event.data.data);
+          displayScreenHandler(data);
+        });
+
+        // button 4/9
+        $('#displayComputer').on('click', { data: data }, (event) => {
+          var data = sortHandler(event.data.data);
+          displayComputerHandler(data);
+        });
+
+        // button 5/9
+        $('#displayAll').on('click', { data: data }, (event) => {
+          var data = sortHandler(event.data.data);
+          displayAllHandler(data);
+        });
+
+        //button 6/9
+        $('#sortPriceUpward').on('click', {data: data}, (event) => {
+          
+          
+          var data = sortPriceUpwardHandler(event.data.data);
+          //feed to new helper
+          displayHelper(data);
+        });
+
+        //button 7/9
+        $('#sortPriceDownward').on('click', {data: data}, (event) => {
+          //sort the data
+          var data = sortPriceDownwardHandler(event.data.data);
+          displayHelper(data);
+        });
+
+
+        //button 8/9
+        $('#sortNameAZ').on('click', {data: data}, (event) => {
+          //sort the data
+          var data = sortNameAZHandler(event.data.data);
+          displayHelper(data);
+        });
+
+        //button 7/9
+        $('#sortNameZA').on('click', {data: data}, (event) => {
+          //sort the data
+          var data = sortNameZAHandler(event.data.data);
+          displayHelper(data);
+        });
+
+
+
+
+        // this is more butttons
+      }
+      
+      function displayProducts(products) {
+        // clear products list
+        $('#products-list').empty();
+  
+        // display products
+        products.forEach((product) => {
+          $('#products-list').append(
+            `
+              <a href="./product.html?id=${product.id}" title="En savoir plus...">
+                <h2>${product.name}</h2>
+                <img alt="${product.name}" src="./assets/img/${product.image}">
+                <p class="price"><small>Prix</small> ${product.price}&thinsp;$</p>
+              </a>
+            
+            `
+          );
+        });
+        $('#products-count').text(products.length + " products");
+      }
+  
+      // fetch products from json file
+      $.ajax({
+        url: './data/products.json',
+        type: 'GET',
+        dataType: 'json',
+        success: (data) => {
+            var tbd = sortHandler(data);
+            displayProducts(tbd);
+            setMyButtons(data);
+          },
+        error: (error) => {
+          console.log(error);
+          }
+      });
+
+
+      let cart = JSON.parse(localStorage.getItem('userCart'));
+
+    if(cart == null || cart.length == 0){
+        
+        $('#myCart').html(`<span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>`);
+
+    }
+    else {
+      $('#myCart').html(`<span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>
+            <span class="count">`+ cart.length +`</span>`);
+  
+    }
+
+  </script>
+
+
+</body>
+</html>

@@ -1,0 +1,258 @@
+
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>OnlineShop - Produit</title>
+
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+  <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+
+</head>
+<body>
+
+  <div class="maindivclass">
+
+    <header>
+      <section>
+        <caption>
+          <img src="assets/img/logo.svg" height="80">
+        </caption>
+        <nav>
+          <a href="index.html">Accueil</a>
+          <a class="active" href="products.html">Produits</a>
+          <a href="contact.html">Contact</a>
+          <a id="myCart" class="shopping-cart" href="./shopping-cart.html" title="Panier">
+            <span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>
+            <span class="count">3</span>
+          </a>
+        </nav>
+      </section>
+    </header>
+
+  
+    <main id="productmainclass">
+
+      
+      <section class="productgaucheclass">
+        <h2 id="product-title">Apple TV</h2>
+        <caption>
+          <img id="product-image" src="">
+        </caption>
+      </section>
+      <section class="productdroiteclass">
+        <p>
+          
+          <br>
+          <br>
+          Description :
+          <div id="product-description"></div>
+          <a id="wikipediaLink" href='_blank' >(Wikipédia)</a>
+
+
+          <br><br>
+          Caractéristiques :
+          <br>
+          <ul id="product-features">
+
+          </ul>
+
+          <br>
+          <br>
+
+
+        </p>
+        <hr>
+        <div class="row">
+        
+          <div id="product-price">
+        
+      </div>
+
+        <form id="add-to-cart-form">
+          <label for="product-quantity">Quantité</label>
+          <input type="number" min="1" id="product-quantity" name="qty" value="1" size="4">
+          <!-- <input type="submit" value="Ajouter"> -->
+          <button id="myAddBtn" class="btn" title="Ajouter au panier" type="submit">
+            <i class="fa fa-cart-plus"></i>&nbsp; Ajouter
+          </button>
+        </form>
+      </div>
+      </section>
+
+    </main>
+
+    <div id="mymagicdiv" style="display: flex;">
+  
+    
+    
+    </div>
+
+
+  </div>
+
+  
+
+<footer>
+  <section>
+    <p>GELO</p>
+  </section>
+</footer>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  
+<script>
+
+
+
+
+  function doMagic() {
+
+
+
+
+
+    function notification(data){
+      $( "#mymagicdiv" ).append( data )
+      }
+
+    notification("<div style='border: 2px solid blue; padding: 10px;' id='noti' class='alert alert-success'><p><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>Item Added!</p></div>");
+
+      setTimeout(() => {
+        $('#mymagicdiv').html('');
+      }, 5000)
+  }
+
+
+  function displayProduct(products){
+    // get id from url
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+
+    // get product from products
+    const product = products.find(product => product.id == id);
+    if (product != null)
+    {
+        // display product
+        $('#product-title').text(product.name);
+        $('#product-image').attr('src', './assets/img/' + product.image);
+        $('#product-description').html(product.description.split(("(<a"))[0]);
+        $('#product-price').text(product.price + "$");
+        if (product.description.includes("href=")) {
+          $('#wikipediaLink').attr('href', product.description.split(("href='"))[1].split("'")[0])
+          $('#wikipediaLink').html(product.description.split(("target='_blank'>"))[1].split("</a>")[0])
+      } else {
+        $('#wikipediaLink').hide()
+      }
+
+        var tba = "";
+        product.features.forEach(element => {
+          tba += "<li>";
+            tba += element;
+            tba += "</li>"
+        });
+
+        $('#product-features').append(tba);
+    }
+    else
+    $('#productmainclass').html('<div style="display: block; flex: none;"><h3> Produit </h3><br><p>Page non-trouvee </p></div>')
+  }
+
+  function wikipediaLink() {
+    productDescription = document.getElementsByClassName("product-description")
+    productDescription.innerHTML += "<a href='" + $('#product-description').html(product.description.split(('href="'))[0]) + "'>(Wikipédia)</a>"
+  }
+
+
+  $.ajax({
+    url: './data/products.json',
+    type: 'GET',
+    dataType: 'json',
+    success: (data) => {
+        displayProduct(data);
+      },
+    error: (error) => {
+      console.log(error);
+      }
+    });
+
+  // listen to form submit
+  $('#add-to-cart-form').submit((event) => {
+    event.preventDefault();
+
+    // get product id
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+
+    // get product quantity
+    const quantity = $('#product-quantity').val();
+
+    // get product from local storage
+    let cart = JSON.parse(localStorage.getItem('userCart'));
+
+    // if products is null, create an empty array
+    if(cart == null){
+      cart = [];
+    }
+
+    // check if product already exists in products
+    var product = cart.find((product) => product.id == id);
+
+    if(product != null){
+      // if product exists, update quantity
+  
+      product.quantity = parseInt(product.quantity) + parseInt(quantity);
+
+
+
+    } else {
+      // if product doesn't exist, add it to products
+      cart.push({
+        id: id,
+        quantity: quantity
+      });
+
+    }
+
+    doMagic();
+
+    // save products in local storage
+    localStorage.setItem('userCart', JSON.stringify(cart));
+
+    // update shopping cart count
+    $('#myCart').html(`<span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>
+            <span class="count">`+ cart.length +`</span>`);
+  });
+
+  let cart = JSON.parse(localStorage.getItem('userCart'));
+
+    if(cart == null || cart.length == 0){
+        
+        $('#myCart').html(`<span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>`);
+
+    }
+    else {
+      $('#myCart').html(`<span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>
+            <span class="count">`+ cart.length +`</span>`);
+  
+    }
+
+
+</script>
+
+</body>
+</html>

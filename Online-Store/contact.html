@@ -1,0 +1,112 @@
+
+
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>OnlineShop - Contact</title>
+
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+  <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+
+</head>
+<body>
+
+  <div class="maindivclass">
+
+    <header>
+      <section>
+        <caption>
+          <img src="assets/img/logo.svg" height="80">
+        </caption>
+        <nav>
+          <a href="index.html">Accueil</a>
+          <a href="products.html">Produits</a>
+          <a class="active" href="contact.html">Contact</a>
+          <a id="myCart" class="shopping-cart" href="./shopping-cart.html" title="Panier">
+            <span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>
+            <span class="count">3</span>
+          </a>
+        </nav>
+      </section>
+    </header>
+
+
+    <main>
+      <section>
+        <h2>Contact</h2>
+        <p>
+          Vous pouvez nous contacter des manières ci-dessous:
+        </p>
+        <div class="contactrow">
+
+          <div class="contactcol">
+            <i class="fa fa-8x fa-mobile-alt contactmobileclass"></i>
+            <br>par téléphone:<br>
+            <a href="tel:1-888-888-8888">(123) 456-7890</a>
+            
+          </div>
+
+          <div class="contactcol">
+            <i class="fa fa-8x fa-map-marker-alt"></i><br>
+            <p>Notre adresse:</p>
+            <p>2900 boulevard Edouard Montpetit</p>
+            <p>Montréal, Québec</p>
+            <p>H3T 1J4</p>
+          </div>
+
+
+          <div class="contactcol">
+            <i class="fa fa-8x fa-envelope"></i>
+            <br>Par courriel:<br>
+            <a href="mailto:OnlineShop@email.ca">OnlineShop@email.ca</a>
+          </div>
+          
+          
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <section>
+      <p>GELO</p>
+    </section>
+  </footer>
+
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  
+
+  <script>
+
+let cart = JSON.parse(localStorage.getItem('userCart'));
+
+if(cart == null || cart.length == 0){
+    
+    $('#myCart').html(`<span class="fa-stack fa-lg">
+          <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+          <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+        </span>`);
+
+}
+else {
+  $('#myCart').html(`<span class="fa-stack fa-lg">
+          <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+          <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+        </span>
+        <span class="count">`+ cart.length +`</span>`);
+
+}
+
+  </script>
+
+  
+
+</body>
+</html>

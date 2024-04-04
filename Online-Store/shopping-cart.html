@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>OnlineShop - Panier</title>
+
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+  <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+
+</head>
+<body>
+
+  <div class="maindivclass">
+    <header>
+      <section>
+        <caption>
+          <img src="assets/img/logo.svg" height="80">
+        </caption>
+        <nav>
+          <a href="index.html">Accueil</a>
+          <a href="products.html">Produits</a>
+          <a href="contact.html">Contact</a>
+          <a id="myCart" class="shopping-cart active" href="./shopping-cart.html" title="Panier">
+            
+          </a>
+        </nav>
+      </section>
+    </header>
+
+    <main>
+      <section>
+        <h2>Panier</h2>
+        <hr>
+        <table id="shopping-cart-table">
+          <tbody id="mytbody">
+            <tr>
+              <th></th>
+              <th>Nom</th>
+              <th>Prix Unitaire</th>
+              <th>Quantité</th>
+              <th>Prix</th>
+            </tr>
+
+
+            </tr>
+
+          </tbody>
+        </table>
+
+        <p style="text-align: right;">Total : <span id="totalSpan"></span> $</p>
+
+        <div id="shopping-cart-two-btn">
+          <button id="viderLePanier" class="btn">Vider le panier</button>
+
+          <a class="btn" href="order.html">Commander</a>
+        </div>
+      
+      </section>
+
+    </main>
+  </div>
+
+  <footer class=".productsfooter">
+    <section>
+      <p>GELO</p>
+    </section>
+  </footer>
+
+
+  <!--                        -->
+  <!--        Scripts         -->
+  <!--                        -->
+
+
+  <!--        jquery import         -->
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+  <!--        custom script         -->
+  
+  <script>
+
+    var totalObjectArray = [];
+
+    
+    function productLink() {
+      var product = cart.find((product) => parseInt(product.id) == parseInt(myid));
+      $()
+    }
+
+    function computeTotal() {
+      var total = 0.0;
+
+      let cart = JSON.parse(localStorage.getItem('userCart'));
+
+      var n = cart.length;
+
+      var i = 1;
+
+      for ( ; i<=n ; i++)
+      {
+        total += parseFloat($($('#tr'+i).children()[4]).text() );
+      }
+
+      return total;
+    }
+
+
+    function increaseCartQty(myid) {
+      var cart = JSON.parse(localStorage.getItem('userCart'));
+
+      var product = cart.find((product) => parseInt(product.id) == parseInt(myid));
+
+      if (parseInt(product.quantity) == 1) {
+
+        $("#decreaseBtn").prop("disabled", false);
+      }
+
+      product.quantity = parseInt(product.quantity) + 1;
+
+
+
+      localStorage.setItem('userCart', JSON.stringify(cart));
+
+      displayShoppingCart();
+
+      setTimeout(computeTotalHelper, 100);
+
+    }
+
+
+    function decreaseCartQty(myid) {
+
+      var cart = JSON.parse(localStorage.getItem('userCart'));
+
+      var product = cart.find((product) => parseInt(product.id) == parseInt(myid));
+      
+      if (parseInt(product.quantity)>1)
+      {
+      if (parseInt(product.quantity) == 2) {
+        product.quantity = parseInt(product.quantity) - 1;
+        $("#decreaseBtn").prop("disabled", true);
+      }
+      else {
+        product.quantity = parseInt(product.quantity) - 1;
+      }
+    }
+
+      
+
+      localStorage.setItem('userCart', JSON.stringify(cart));
+
+      displayShoppingCart();
+
+      setTimeout(computeTotalHelper, 100);
+
+
+    }
+
+
+
+    function removeFromCart(myid) {
+      cart = JSON.parse(localStorage.getItem('userCart'));
+      if (confirm("Voulez-vous retirer l'article du panier ?") == true) {
+        cart = cart.filter(function( obj ) {
+          return parseInt(obj.id) !== parseInt(myid);
+        });
+        localStorage.removeItem('userCart');  
+        localStorage.setItem('userCart', JSON.stringify(cart));
+      
+
+        displayShoppingCart();
+        setTimeout(computeTotalHelper, 100);
+      }
+    }
+
+    $('#viderLePanier').click(() => {
+      localStorage.clear();
+
+      displayShoppingCart();
+
+      $('#myCart').html(`<span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>`);
+
+    });
+
+    function fixDecimals( value, dp ){
+      return +parseFloat(value).toFixed( dp );
+    }
+    
+    function forgeSingleLineDisplay(element, n) {
+      $.ajax({
+        url: './data/products.json',
+        type: 'GET',
+        dataType: 'json',
+        success: (data) => {
+            var tba="";
+            // element.id ==
+            var myobject;
+
+            data.forEach((that) => {
+
+              if (that.id == element.id)
+              {
+                myobject = that;
+              }
+            });
+
+            tba += '<tr id="tr' + n + '">';
+            tba += '<td><button onclick="removeFromCart('+ myobject.id +')" class="cart-btn-x">X</button></td>';
+            tba += '<td><a href="product.html?id=' + myobject.id + '">'+ myobject.name +'</a></td>';
+            tba += '<td>' + myobject.price +' $</td>';
+            tba += '<td><button id="decreaseBtn" onclick="decreaseCartQty('+ myobject.id +')" class="cart-btn-x">-</button> ' + element.quantity + ' <button id="increaseBtn" onclick="increaseCartQty('+ myobject.id +')" class="cart-btn-x">+</button></td>';
+            tba += '<td><p id="price1"> ' + fixDecimals((parseFloat(myobject.price) * parseFloat(element.quantity)), 2) +' $</p></td>';
+            tba += '</tr>';
+
+            $('#mytbody').append(tba);
+              
+          },
+        error: (error) => {
+          console.log(error);
+          }
+      });
+
+    }
+
+    function displayShoppingCart() {
+      
+      let cart = JSON.parse(localStorage.getItem('userCart'));
+
+      if(cart == null || cart.length == 0){
+        
+        $('#myCart').html(`<span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>`);
+
+      }
+      else {
+        $('#myCart').html(`<span class="fa-stack fa-lg">
+                <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+              </span>
+              <span class="count">`+ cart.length +`</span>`);
+    
+      }
+
+      // if products is null, create an empty array
+      if(cart == null || cart.length == 0){
+          $('main').html("<div><h2>Shopping-Cart</h2><p>Aucun produit dans le panier</p></div>");
+      }
+      else {
+        var mytbody = $('#mytbody');
+        mytbody.empty();
+        var tba = `
+                <tr>
+                  <th></th>
+                  <th>Nom</th>
+                  <th>Prix Unitaire</th>
+                  <th>Quantité</th>
+                  <th>Prix</th>
+                </tr> `;
+        mytbody.append(tba);
+        var i = 1;
+        cart.forEach(element => {
+          forgeSingleLineDisplay(element, i);
+          i++;
+        });
+        
+      }
+
+    } // END FUNCTION displayShoppingCart(){...}
+
+
+
+    function computeTotalHelper() {
+        var total = 0;
+        total = computeTotal();
+        $('#totalSpan').text(total.toFixed(2));
+    }
+
+    $('document').ready(() => {
+      computeTotalHelper();
+});
+
+    setTimeout(computeTotalHelper, 100);
+    displayShoppingCart();
+
+
+
+
+    let cart = JSON.parse(localStorage.getItem('userCart'));
+
+    if(cart == null || cart.length == 0){
+        
+        $('#myCart').html(`<span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>`);
+
+    }
+    else {
+      $('#myCart').html(`<span class="fa-stack fa-lg">
+              <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+              <i class="fa fa-shopping-cart fa-stack-1x" style="color: #14597f;"></i>
+            </span>
+            <span class="count">`+ cart.length +`</span>`);
+  
+    }
+    
+  </script>
+
+</body>
+</html>
