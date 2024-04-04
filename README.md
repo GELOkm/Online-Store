@@ -2,7 +2,7 @@
 
 ## About The Project
 
-Welcome to the Simple Online Shop, a minimalistic e-commerce platform designed for small businesses or individuals looking to showcase their products online. This project is built using only HTML and CSS, making it lightweight, fast, and easy to customize. It's perfect for those who are just starting with web development or for anyone who needs a straightforward, no-frills online storefront.
+Welcome to the Simple Online Shop, a minimalistic e-commerce platform designed for small businesses or individuals looking to showcase their products online. This project is built using HTML, JavaScript and CSS, making it lightweight, fast, and easy to customize. It's perfect for those who are just starting with web development or for anyone who needs a straightforward, no-frills online storefront.
 
 ## Features
 
